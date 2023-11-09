@@ -640,8 +640,8 @@ func createPatch(target *resource.Info, current runtime.Object) ([]byte, types.P
 
 	if isUnstructured || isCRD {
 		// fall back to generic JSON merge patch
-		fmt.Printf("oldData: %s" + string(oldData))
-		fmt.Printf("newData: %s" + string(newData))
+		fmt.Printf("oldData: %s \n" + string(oldData))
+		fmt.Printf("newData: %s \n" + string(newData))
 		patch, err := jsonpatch.CreateMergePatch(oldData, newData)
 		return patch, types.MergePatchType, err
 	}
