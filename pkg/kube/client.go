@@ -643,6 +643,9 @@ func createPatch(target *resource.Info, current runtime.Object) ([]byte, types.P
 
 	// On newer K8s versions, CRDs aren't unstructured but has this dedicated type
 	_, isCRD := versionedObject.(*apiextv1beta1.CustomResourceDefinition)
+	if !isCRD {
+		_, isCRD = versionedObject.(*apiextv1.CustomResourceDefinition)
+	}
 
 	if isUnstructured || isCRD {
 		// fall back to generic JSON merge patch
@@ -691,6 +694,8 @@ func updateResource(c *Client, target *resource.Info, currentObj runtime.Object,
 		}
 		// send patch to server
 		c.Log("Patch %s %q in namespace %s", kind, target.Name, target.Namespace)
+		c.Log("Patch: %s ", string(patch))
+
 		obj, err = helper.Patch(target.Namespace, target.Name, patchType, patch, nil)
 		if err != nil {
 			return errors.Wrapf(err, "cannot patch %q with kind %s", target.Name, kind)
