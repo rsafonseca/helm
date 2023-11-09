@@ -637,12 +637,11 @@ func createPatch(target *resource.Info, current runtime.Object) ([]byte, types.P
 
 	// On newer K8s versions, CRDs aren't unstructured but has this dedicated type
 	_, isCRD := versionedObject.(*apiextv1beta1.CustomResourceDefinition)
-	if !isCRD {
-		_, isCRD = versionedObject.(*apiextv1.CustomResourceDefinition)
-	}
 
 	if isUnstructured || isCRD {
 		// fall back to generic JSON merge patch
+		fmt.Printf("oldData: %s" + string(oldData))
+		fmt.Printf("newData: %s" + string(newData))
 		patch, err := jsonpatch.CreateMergePatch(oldData, newData)
 		return patch, types.MergePatchType, err
 	}
